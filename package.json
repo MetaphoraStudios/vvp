@@ -2,9 +2,10 @@
   "name": "vvp",
   "version": "1.0.0",
   "description": "A simpler player for my custom simple volumetric video format.",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "jest "
+    "test": "jest ./src/",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
