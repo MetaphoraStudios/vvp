@@ -46,8 +46,9 @@ class App {
 
   private registerInspectorHandler(scene: Scene) {
     window.addEventListener("keydown", (ev) => {
+      console.log("ASEFASDF", ev);
       // Shift+Ctrl+Alt+I
-      if (ev.shiftKey && ev.ctrlKey && ev.altKey && ev.key === "I") {
+      if (ev.shiftKey && ev.ctrlKey && ev.altKey && ev.code === "KeyI") {
         if (scene.debugLayer.isVisible()) {
           scene.debugLayer.hide();
         } else {
