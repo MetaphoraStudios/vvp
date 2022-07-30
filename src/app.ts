@@ -6,14 +6,32 @@ import { Engine, Scene, ArcRotateCamera, Vector3, HemisphericLight, Mesh, MeshBu
 class App {
   constructor() {
     // create the canvas html element and attach it to the webpage
-    let canvas = document.createElement("canvas");
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.id = "gameCanvas";
+    let canvas = this.createCanvas();
     document.body.appendChild(canvas);
 
     // initialize babylon scene and engine
     let engine = new Engine(canvas, true);
+    let scene = this.createScene(engine, canvas);
+
+    // register event handlers
+    this.registerInspectorHandler(scene);
+
+    // run the main render loop
+    engine.runRenderLoop(() => {
+      scene.render();
+    });
+  }
+
+  // create canvas
+  private createCanvas(): HTMLCanvasElement {
+    let canvas = document.createElement("canvas");
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.id = "gameCanvas";
+    return canvas;
+  }
+
+  private createScene(engine: Engine, canvas: HTMLCanvasElement): Scene {
     let scene = new Scene(engine);
 
     let camera: ArcRotateCamera = new ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 4, 6, Vector3.Zero(), scene);
@@ -23,21 +41,19 @@ class App {
     let sphere: Mesh = MeshBuilder.CreateSphere("sphere", { diameter: 1 }, scene);
     sphere.position.y = 0.5;
 
-    // hide/show the Inspector
+    return scene;
+  }
+
+  private registerInspectorHandler(scene: Scene) {
     window.addEventListener("keydown", (ev) => {
       // Shift+Ctrl+Alt+I
-      if (ev.shiftKey && ev.ctrlKey && ev.altKey && ev.keyCode === 73) {
+      if (ev.shiftKey && ev.ctrlKey && ev.altKey && ev.key === "I") {
         if (scene.debugLayer.isVisible()) {
           scene.debugLayer.hide();
         } else {
           scene.debugLayer.show();
         }
       }
-    });
-
-    // run the main render loop
-    engine.runRenderLoop(() => {
-      scene.render();
     });
   }
 }
