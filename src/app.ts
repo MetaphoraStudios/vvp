@@ -51,7 +51,8 @@ class App {
     camera.attachControl(canvas, true);
     new HemisphericLight("light", new Vector3(1, 1, 0), scene);
 
-    let depthMap = new Array(100 * 100).fill(0);
+    let mapSize = 100 * 100
+    let depthMap = Array.from({length: mapSize}, () => Math.floor(Math.random() * 255));;
     let anchor = new Vector3(-75, -75, 0);
     this.createVoxelGrid(depthMap, anchor, scene);
 
@@ -85,7 +86,8 @@ class App {
       for (let y = 0; y < height; y++) {
         let name = `box${x}-${y}`;
         let box = MeshBuilder.CreateBox(name, { size }, scene);
-        let position = new Vector3(x * (size + spacing) - offset, y * (size + spacing) - offset, 0);
+        let pixel = depthMap[x + y * width];
+        let position = new Vector3(x * (size + spacing) - offset, y * (size + spacing) - offset, pixel * 0.1);
         box.position = position.add(anchor);
       }
     }
