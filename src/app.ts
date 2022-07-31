@@ -1,7 +1,16 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
-import { Engine, Scene, ArcRotateCamera, Vector3, HemisphericLight, Mesh, MeshBuilder } from "@babylonjs/core";
+import {
+  Engine,
+  Scene,
+  ArcRotateCamera,
+  Vector3,
+  HemisphericLight,
+  MeshBuilder,
+  Texture,
+  StandardMaterial
+} from "@babylonjs/core";
 
 class App {
   constructor() {
@@ -38,12 +47,19 @@ class App {
     camera.attachControl(canvas, true);
     new HemisphericLight("light", new Vector3(1, 1, 0), scene);
 
-    this.createVoxelGrid(Vector3.Zero(), scene);
+    let texture = new Texture("../assets/recordings/20220211202818/depth.10037.png", scene);
+    let material = new StandardMaterial("mat", scene);
+    material.diffuseTexture = texture;
+    material.backFaceCulling = false;
+    let plane = MeshBuilder.CreatePlane("plane", { width: 10, height: 10 }, scene);
+    plane.material = material;
+
+    this.createVoxelGrid([], Vector3.Zero(), scene);
 
     return scene;
   }
 
-  private createVoxelGrid(anchor: Vector3, scene: Scene) {
+  private createVoxelGrid(depthMap: number[], anchor: Vector3, scene: Scene) {
     let width = 10;
     let height = 10;
     let spacing = 0.5;

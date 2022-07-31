@@ -2,7 +2,7 @@
 .DS_Store
 
 # Recordings
-assets/recordings/*/*.png
+public/assets/recordings/*/*.png
 
 # Logs
 logs
