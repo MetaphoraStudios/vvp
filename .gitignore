@@ -1,6 +1,9 @@
 # Platform
 .DS_Store
 
+# Recordings
+assets/recordings/*/*.png
+
 # Logs
 logs
 *.log
