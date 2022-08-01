@@ -8,7 +8,9 @@ import {
   Vector3,
   HemisphericLight,
   MeshBuilder,
-  RawTexture
+  StandardMaterial,
+  Texture,
+  Color3
 } from "@babylonjs/core";
 import {
   Image,
@@ -49,15 +51,24 @@ class App {
 
     let camera: ArcRotateCamera = new ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 200, Vector3.Zero(), scene);
     camera.attachControl(canvas, true);
-    new HemisphericLight("light", new Vector3(1, 1, 0), scene);
+    let light = new HemisphericLight("light", new Vector3(0, -20, 0), scene);
+    light.intensity = 40.0;
 
-    let mapSize = 100 * 100
-    let depthMap = Array.from({length: mapSize}, () => Math.floor(Math.random() * 255));;
-    let anchor = new Vector3(-75, -75, 0);
-    this.createVoxelGrid(depthMap, anchor, scene);
+    const largeGroundMat = new StandardMaterial("largeGroundMat");
+    largeGroundMat.diffuseTexture = new Texture("assets/recordings/20220211202818/camera.8153.png");
+    largeGroundMat.specularColor = new Color3(0, 0, 0);
+    
+    const scale = -50;
+    const largeGround = MeshBuilder.CreateGroundFromHeightMap(
+      "largeGround",
+      "assets/recordings/20220211202818/depth.8153.png",
+      { width: 200, height: 150, subdivisions: 100, minHeight: 0, maxHeight: scale }
+    );
+    largeGround.material = largeGroundMat;
+    largeGround.rotation = new Vector3(-Math.PI / 2, -Math.PI, 0.0);
 
-    let colourImage = this.createImage("debugColour", "assets/recordings/20220211202818/camera.10037.png")
-    let depthImage = this.createImage("debugDepth", "assets/recordings/20220211202818/depth.10037.png");
+    let colourImage = this.createImage("debugColour", "assets/recordings/20220211202818/camera.8153.png")
+    let depthImage = this.createImage("debugDepth", "assets/recordings/20220211202818/depth.8153.png");
     depthImage.top = "110px";
     let advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
     advancedTexture.addControl(colourImage);
